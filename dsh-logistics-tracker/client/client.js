@@ -24,20 +24,24 @@ window.__ModuleLoader__.load({
       tag.dataset.plugin = 'dsh-logistics-tracker';
       tag.dataset.pluginCss = CSS_ID;
       tag.textContent = [
+        /* 根容器：占满侧边栏槽位，防止溢出 */
+        '.dshlg_root{box-sizing:border-box;width:100%;max-width:100%;font-size:12px;line-height:20px}',
         /* 侧边栏入口按钮（footer.action 槽位内） */
-        '.dshlg_trigger{display:flex;align-items:center;gap:6px;width:100%;height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--dsw-alias-label-secondary,#b6b6b6);cursor:pointer;font-size:12px;line-height:20px;text-align:left}',
+        '.dshlg_trigger{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--dsw-alias-label-secondary,#b6b6b6);cursor:pointer;font-size:12px;line-height:20px;text-align:left}',
         '.dshlg_trigger:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary,#e6e6e6)}',
         '.dshlg_trigger[data-active="true"]{background:var(--dsw-alias-interactive-bg-active,rgba(37,99,235,.18));color:var(--dsw-alias-label-primary,#e6e6e6)}',
         '.dshlg_trigger[data-wide="false"]{justify-content:center;padding:0}',
-        '.dshlg_triggerLabel{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-        /* 展开面板：侧边栏内联（跟随 footArea 宽度），不遮挡对话区 */
-        '.dshlg_panel{display:flex;flex-direction:column;gap:6px;margin-top:4px;padding:8px;border-radius:8px;border:1px solid var(--dsw-alias-border-l2-darkmode-thin,rgba(128,128,128,.2));background:var(--dsw-alias-interactive-bg-hover,transparent)}',
-        '.dshlg_panel[data-wide="false"]{position:fixed;left:48px;bottom:72px;width:280px;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.4)}',
-        '.dshlg_input{flex:1;min-width:0;height:26px;padding:0 8px;border-radius:6px;border:1px solid var(--dsw-alias-separator-primary,#333);background:var(--dsw-alias-interactive-bg-hover,transparent);color:var(--dsw-alias-label-primary,#e6e6e6);outline:none}',
-        '.dshlg_row{display:flex;gap:6px;align-items:center}',
-        '.dshlg_btn{height:26px;padding:0 10px;border:0;border-radius:6px;background:var(--dsw-alias-interactive-primary,#2563eb);color:#fff;cursor:pointer;font-size:12px;white-space:nowrap}',
+        '.dshlg_triggerIcon{flex-shrink:0}',
+        '.dshlg_triggerLabel{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+        /* 展开面板：内联跟随槽位宽度；折叠时固定浮层 */
+        '.dshlg_panel{box-sizing:border-box;display:flex;flex-direction:column;gap:6px;width:100%;max-width:100%;margin-top:4px;padding:8px;border-radius:8px;border:1px solid var(--dsw-alias-border-l2-darkmode-thin,rgba(128,128,128,.2));background:var(--dsw-alias-interactive-bg-hover,transparent)}',
+        '.dshlg_panel[data-wide="false"]{position:fixed;left:48px;bottom:72px;width:300px;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.4)}',
+        '.dshlg_row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;box-sizing:border-box;width:100%;min-width:0}',
+        '.dshlg_input{flex:1 1 120px;min-width:0;box-sizing:border-box;height:26px;padding:0 8px;border-radius:6px;border:1px solid var(--dsw-alias-separator-primary,#333);background:var(--dsw-alias-interactive-bg-hover,transparent);color:var(--dsw-alias-label-primary,#e6e6e6);outline:none}',
+        '.dshlg_btn{flex:0 0 auto;box-sizing:border-box;height:26px;padding:0 12px;border:0;border-radius:6px;background:var(--dsw-alias-interactive-primary,#2563eb);color:#fff;cursor:pointer;font-size:12px;white-space:nowrap}',
         '.dshlg_btn:disabled{opacity:.6;cursor:default}',
-        '.dshlg_result{margin-top:2px;color:var(--dsw-alias-label-secondary,#b6b6b6);font-size:12px;line-height:18px}',
+        '.dshlg_btn[data-full="true"]{width:100%}',
+        '.dshlg_result{box-sizing:border-box;width:100%;margin-top:2px;color:var(--dsw-alias-label-secondary,#b6b6b6);font-size:12px;line-height:18px;overflow-wrap:break-word;word-break:break-word}',
         '.dshlg_state{font-weight:600;color:var(--dsw-alias-label-primary,#e6e6e6)}',
         '.dshlg_err{color:var(--dsw-alias-state-error-primary,#f06)}',
         '.dshlg_trace{margin:4px 0 0;padding-left:16px}',
@@ -96,11 +100,12 @@ window.__ModuleLoader__.load({
           'aria-expanded': open,
           onClick: () => setOpen((v) => !v),
         },
-          react.createElement('span', { 'aria-hidden': true }, '📦'),
+          react.createElement('span', { className: 'dshlg_triggerIcon', 'aria-hidden': true }, '📦'),
           wide ? react.createElement('span', { className: 'dshlg_triggerLabel' }, '查物流') : null,
         ),
         /* 展开面板 */
         open ? react.createElement('div', { className: 'dshlg_panel', 'data-wide': String(wide) },
+          /* 第一行：运单号 */
           react.createElement('div', { className: 'dshlg_row' },
             react.createElement('input', {
               className: 'dshlg_input',
@@ -109,12 +114,12 @@ window.__ModuleLoader__.load({
               onChange: (e) => setNum(e.target.value),
               onKeyDown: onKey,
             }),
-            react.createElement('button', { className: 'dshlg_btn', onClick: query, disabled: loading }, loading ? '…' : '查询'),
           ),
+          /* 第二行：公司编码 + 手机后4位 */
           react.createElement('div', { className: 'dshlg_row' },
             react.createElement('input', {
               className: 'dshlg_input',
-              style: { flex: 1 },
+              style: { flex: '1 1 100px' },
               placeholder: '公司编码(可选)',
               value: com,
               onChange: (e) => setCom(e.target.value),
@@ -122,12 +127,22 @@ window.__ModuleLoader__.load({
             }),
             react.createElement('input', {
               className: 'dshlg_input',
-              style: { flex: 1 },
+              style: { flex: '1 1 100px' },
               placeholder: '手机后4位(可选)',
               value: phone,
               onChange: (e) => setPhone(e.target.value),
               onKeyDown: onKey,
             }),
+          ),
+          /* 第三行：查询按钮（独占一行，保证始终可见） */
+          react.createElement('div', { className: 'dshlg_row' },
+            react.createElement('button', {
+              type: 'button',
+              className: 'dshlg_btn',
+              'data-full': 'true',
+              onClick: query,
+              disabled: loading,
+            }, loading ? '查询中…' : '查物流'),
           ),
           error !== '' ? react.createElement('div', { className: 'dshlg_result dshlg_err' }, error) : null,
           result !== null ? react.createElement('div', { className: 'dshlg_result' },
