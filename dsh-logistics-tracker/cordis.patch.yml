@@ -1,0 +1,28 @@
+# dsh-logistics-tracker bundle 层：一个插件行。
+# 安装：dsh plugin --profile web add file:/path/to/dsh-logistics-tracker
+#
+# 密钥优先级：config 明文 > credentials 引用($DSH_HOME/.credentials.yaml) > 环境变量。
+# 建议把密钥写进 $DSH_HOME/.credentials.yaml：
+#   KDNIAO_EBUSINESS_ID: xxx
+#   KDNIAO_APP_KEY: xxx
+#   KUAIDI100_CUSTOMER: xxx
+#   KUAIDI100_KEY: xxx
+# （快递鸟与快递100 二选一即可）
+- insert:
+    - id: logistics-tracker
+      name: dsh-logistics-tracker
+      config:
+        # provider: auto | kdniao | kuaidi100（auto = 优先使用已配置密钥的通道）
+        provider: auto
+        # 未指定快递公司编码时自动识别承运商
+        autoDetect: true
+        # 明文密钥（留空则走 credentials 引用 / 环境变量）
+        kdniaoEbusinessId: ''
+        kdniaoApiKey: ''
+        kuaidi100Customer: ''
+        kuaidi100Key: ''
+        # credentials / 环境变量引用名
+        kdniaoEbusinessIdRef: KDNIAO_EBUSINESS_ID
+        kdniaoApiKeyRef: KDNIAO_APP_KEY
+        kuaidi100CustomerRef: KUAIDI100_CUSTOMER
+        kuaidi100KeyRef: KUAIDI100_KEY

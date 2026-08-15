@@ -1,0 +1,70 @@
+{
+  "name": "dsh-logistics-tracker",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness (DSH) plugin: aggregated express/logistics tracking for Pinduoduo / Taobao / Douyin purchases via KDNiao and Kuaidi100. 授权后聚合查询拼多多/淘宝/抖音等电商平台的商品快递物流信息（快递鸟/快递100 双通道）。",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "client",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "logistics",
+    "express",
+    "tracking",
+    "kuaidi",
+    "kuaidi100",
+    "kdniao",
+    "快递",
+    "物流",
+    "运单查询"
+  ],
+  "author": {
+    "name": "tingyang266"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tingyang266/dsh-logistics-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tingyang266/dsh-logistics-tracker/issues"
+  },
+  "homepage": "https://github.com/tingyang266/dsh-logistics-tracker#readme",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    }
+  }
+}
